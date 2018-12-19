@@ -63,23 +63,33 @@
     },
     {
       "id": 2,
-      "name": "Emma Beaton"
+      "name": "Emma Beaton",
+      "phoneNumber": "222-333-4455"
     },
     {
       "id": 3,
-      "name": "Dani Adkins"
+      "name": "Dani Adkins",
+      "phoneNumber": "333-444-5566"
     },
     {
       "id": 4,
-      "name": "Adam Oswalt"
+      "name": "Adam Oswalt",
+      "phoneNumber": "444-555-6677"
     },
     {
       "id": 5,
-      "name": "Fletcher Bangs"
+      "name": "Fletcher Bangs",
+      "phoneNumber": "555-666-7788"
     },
     {
       "id": 6,
-      "name": "Angela Lee"
+      "name": "Angela Lee",
+      "phoneNumber": "667-888-9988"
+    },
+    {
+      "name": "Kelly Morin",
+      "phoneNumber": "615-838-9644",
+      "id": 7
     }
   ],
   "animalsOwners": [

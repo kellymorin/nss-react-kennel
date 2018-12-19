@@ -29,7 +29,7 @@ export default class AnimalList extends Component{
       {
         this.props.animals.map(animal =>
           <div key={animal.id} className="card">
-          <img src={dog} className="icon--dog"/>
+          <img src={dog} alt="dog icon" className="icon--dog"/>
             {animal.name}
             <p>Owned by: {this.animalOwners(animal.id).join(" & ")}</p>
             <Link className="nav-link" to={`/animals/${animal.id}`}>Details</Link>

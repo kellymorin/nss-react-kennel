@@ -1,18 +1,35 @@
 import React, { Component } from 'react'
 import "./Animal.css"
+import CaptureOwnerDetail from "../Owner/CaptureOwnerDetail"
+import SubmitButton from "../Owner/SubmitButton"
+import AnimalDetails from "./CaptureAnimalDetails"
+import AssignOwner from './AssignOwner'
 
 class AnimalForm extends Component {
   // Set initial state
   state = {
     animalName: "",
     breed: "",
-    employee: ""
+    employee: "",
+    ownerName: "",
+    ownerPhone: "",
+    owner: ""
   }
 
   // Update state whenever an input field is edited
   handleFieldChange = evt => {
     const stateToChange = {}
-    stateToChange[evt.target.id] = evt.target.value
+    if(evt.target.id === "owner" && evt.target.value === "addOwner"){
+      this.props.showOwnerForm()
+    }else if(evt.target.id === "ownerFirstName"){
+      let lastName = document.querySelector("#ownerLastName")
+      stateToChange["ownerName"] = `${evt.target.value} ${lastName.value}`
+    }else if(evt.target.id === "ownerLastName"){
+      let firstName = document.querySelector("#ownerFirstName")
+      stateToChange["ownerName"] = `${firstName.value} ${evt.target.value}`
+    }else{
+      stateToChange[evt.target.id] = evt.target.value
+    }
     this.setState(stateToChange)
   }
 
@@ -22,39 +39,60 @@ class AnimalForm extends Component {
    */
   constructNewAnimal = evt => {
     evt.preventDefault()
-    if (this.state.employee === "") {
+    let postedOwner= ""
+    let postedAnimal= ""
+    if(this.state.employee === ""){
       window.alert("Please select a caretaker")
-    } else {
-      const animal = {
+    }
+    else if(this.props.addOwnerState === true){
+      const animal ={
         name: this.state.animalName,
         breed: this.state.breed,
         employeeId: this.props.employees.find(e => e.name === this.state.employee).id
       }
-
-      // Create the animal and redirect user to animal list
-      this.props.addAnimal(animal).then(() => this.props.history.push("/animals"))
+      this.props.addAnimal(animal)
+      .then((newAnimal)=> {
+        postedAnimal = newAnimal
+        const owner = {
+          name: this.state.ownerName,
+          phoneNumber: this.state.ownerPhone
+        }
+        return this.props.addOwner(owner)
+      })
+      .then((newOwner)=> {
+        postedOwner = newOwner
+        const animalOwner = {
+          ownerId: postedOwner.id,
+          animalId: postedAnimal.id
+        }
+        return this.props.addAnimalOwner(animalOwner)
+      }).then(()=> this.props.history.push("/animals"))
+    } else{
+      const animal ={
+        name: this.state.animalName,
+        breed: this.state.breed,
+        employeeId: this.props.employees.find(e => e.name === this.state.employee).id
+      }
+      this.props.addAnimal(animal)
+      .then((newAnimal)=> {
+        const animalOwner={
+          ownerId: this.props.owners.find(e => e.name === this.state.owner).id,
+          animalId: newAnimal.id
+        }
+        return this.props.addAnimalOwner(animalOwner)
+      }).then(()=> this.props.history.push("/animals"))
     }
   }
 
   render() {
+    let ownerStatus = () => <AssignOwner owners={this.props.owners} handleFieldChange={this.handleFieldChange} />
+    if(this.props.addOwnerState === true){
+      ownerStatus = () => <CaptureOwnerDetail owners={this.props.owners} handleFieldChange={this.handleFieldChange} />
+    }
     return (
       <React.Fragment>
         <form className="animalForm">
-          <div className="form-group">
-            <label htmlFor="animalName">Animal name</label>
-            <input type="text" required="true"
-              className="form-control"
-              onChange={this.handleFieldChange}
-              id="animalName"
-              placeholder="Animal name" />
-          </div>
-          <div className="form-group">
-            <label htmlFor="breed">Breed</label>
-            <input type="text" required="true"
-              className="form-control"
-              onChange={this.handleFieldChange}
-              id="breed" placeholder="Breed" />
-          </div>
+          <AnimalDetails handleFieldChange={this.handleFieldChange}/>
           <div className="form-group">
             <label htmlFor="employee">Assign to caretaker</label>
             <select defaultValue="" name="employee" id="employee"
@@ -65,11 +103,13 @@ class AnimalForm extends Component {
               }
             </select>
           </div>
-          <button type="submit" onClick={this.constructNewAnimal} className="btn btn-primary">Submit</button>
+          {ownerStatus()}
+          <SubmitButton submitFunction={this.constructNewAnimal} />
         </form>
       </React.Fragment>
     )
   }
 }
+
 
 export default AnimalForm
