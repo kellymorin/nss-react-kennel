@@ -25,10 +25,30 @@ export default class Kennel extends Component {
     {id: 5, breed: "Fish", name: "Goldy" }
   ]
 
+  ownersFromAPI = [
+    { id: 1, name: "Ryan Tanay" },
+    { id: 2, name: "Emma Beaton" },
+    { id: 3, name: "Dani Adkins" },
+    { id: 4, name: "Adam Oswalt" },
+    { id: 5, name: "Fletcher Bangs" },
+    { id: 6, name: "Angela Lee" }
+]
+
+animalsOwnersFromAPI = [
+  {id: 1, animalId: 1, ownerId: 1},
+  {id: 2, animalId: 1, ownerId: 2},
+  {id: 3, animalId: 2, ownerId: 3},
+  {id: 4, animalId: 3, ownerId: 4},
+  {id: 5, animalId: 4, ownerId: 5},
+  {id: 6, animalId: 5, ownerId: 6}
+]
+
   state={
     employees: this.employeesFromAPI,
     locations: this.locationsFromAPI,
     animals: this.animalsFromAPI,
+    owners: this.ownersFromAPI,
+    animalsOwners: this.animalsOwnersFromAPI
   }
 
   render() {
@@ -36,7 +56,7 @@ export default class Kennel extends Component {
       <article className="kennel">
         <LocationList locations={this.state.locations}/>
         <EmployeeList employees={this.state.employees}/>
-        <AnimalList animals={this.state.animals} />
+        <AnimalList animals={this.state.animals} owners={this.state.owners} animalsOwners={this.state.animalsOwners}/>
       </article>
     );
   }
