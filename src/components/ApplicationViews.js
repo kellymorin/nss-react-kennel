@@ -44,6 +44,18 @@ export default class ApplicationViews extends Component{
     }))
   }
 
+  deleteEmployees = (id) => {
+    return fetch(`http://localhost:5002/employees/${id}`, {
+      method: "DELETE"
+    })
+    .then(e => e.json())
+    .then(()=> fetch(`http://localhost:5002/employees`))
+    .then(e => e.json())
+    .then(employees => this.setState({
+      employees: employees
+    }))
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -54,7 +66,7 @@ export default class ApplicationViews extends Component{
           return <AnimalList animals={this.state.animals} owners={this.state.owners} animalsOwners={this.state.animalsOwners} deleteAnimal={this.deleteAnimal}/>
         }} />
         <Route path="/employees" render={(props) => {
-          return <EmployeeList employees={this.state.employees} />
+          return <EmployeeList employees={this.state.employees} deleteEmployees={this.deleteEmployees}/>
         }} />
         <Route path="/owners" render={(props)=>{
           return <OwnerList owners={this.state.owners} />
