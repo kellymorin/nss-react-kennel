@@ -1,6 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import {BrowserRouter as Router} from 'react-router-dom'
+import './index.css'
 import Kennel from './components/Kennel'
 
-ReactDOM.render(<Kennel />, document.querySelector("#root"));
+ReactDOM.render(
+  <Router>
+    <Kennel />
+  </Router>
+  , document.querySelector("#root"))
