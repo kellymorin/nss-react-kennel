@@ -3,7 +3,11 @@ import {Route} from 'react-router-dom'
 import AnimalList from './Animal/AnimalList'
 import LocationList from './Location/LocationList'
 import EmployeeList from './Employee/EmployeeList'
-import OwnerList from './Owner/OwnerList';
+import OwnerList from './Owner/OwnerList'
+import AnimalManager from '../modules/AnimalManager'
+import EmployeeManager from '../modules/EmployeeManager'
+import OwnerManager from '../modules/OwnerManager'
+import LocationManager from '../modules/LocationManager'
 
 export default class ApplicationViews extends Component{
   state={
@@ -17,73 +21,38 @@ export default class ApplicationViews extends Component{
   componentDidMount() {
     const newState = {}
 
-    fetch("http://localhost:5002/animals")
-        .then(r => r.json())
-        .then(animals => newState.animals = animals)
-        .then(() =>fetch("http://localhost:5002/employees").then(r => r.json()))
-        .then(employees => newState.employees = employees)
-        .then(() => fetch("http://localhost:5002/locations")
-        .then(r => r.json()))
-        .then(locations => newState.locations = locations)
-        .then(() => fetch("http://localhost:5002/owners").then(r => r.json()))
-        .then(owners => newState.owners = owners)
-        .then(() => fetch("http://localhost:5002/animalsOwners").then(r => r.json()))
-        .then(animalsOwners => newState.animalsOwners = animalsOwners)
-        .then(() => this.setState(newState))
+    AnimalManager.getAll().then(animals => newState.animals = animals)
+      .then(EmployeeManager.getAll().then(employees => newState.employees = employees))
+      .then(LocationManager.getAll().then(locations => newState.locations = locations))
+      .then(OwnerManager.getAll().then(owners => newState.owners = owners))
+      .then(() => fetch("http://localhost:5002/animalsOwners").then(r => r.json()))
+      .then(animalsOwners => newState.animalsOwners = animalsOwners)
+      .then(() => this.setState(newState))
   }
 
-  deleteAnimal = id => {
-    return fetch(`http://localhost:5002/animals/${id}`, {
-      method: "DELETE"
-    })
-    .then(e => e.json())
-    .then(()=> fetch(`http://localhost:5002/animals`))
-    .then(e => e.json())
-    .then(animals => this.setState({
+  deleteAnimal = (id) => {
+    AnimalManager.delete(id).then(animals => this.setState({
       animals: animals
     }))
   }
 
   deleteEmployees = (id) => {
-    return fetch(`http://localhost:5002/employees/${id}`, {
-      method: "DELETE"
-    })
-    .then(e => e.json())
-    .then(()=> fetch(`http://localhost:5002/employees`))
-    .then(e => e.json())
-    .then(employees => this.setState({
+    EmployeeManager.delete(id).then(employees => this.setState({
       employees: employees
     }))
   }
 
   deleteOwners = (id) => {
-    let animals = []
-    return fetch(`http://localhost:5002/animalsOwners?ownerId=${id}`)
-    .then(e => e.json())
-    .then(animalOwners => animals.push(animalOwners))
-    .then(()=> fetch(`http://localhost:5002/owners/${id}`, {
-      method: "DELETE"
+    OwnerManager.delete(id).then(owners => this.setState({
+      owners: owners
     }))
-    .then(e=> e.json())
-    .then(() => console.log(animals[0][0].animalId))
-    .then(()=> fetch(`http://localhost:5002/animals/${animals[0][0].animalId}`, {
-      method: "DELETE"
+    .then(() => AnimalManager.getAll()).then(animals => this.setState({
+      animals: animals
     }))
-    .then(e => e.json())
-    .then(()=> fetch(`http://localhost:5002/animalsOwners`))
+    .then(()=> fetch("http://localhost:5002/animalsOwners"))
     .then(e => e.json())
     .then(animalsOwners => this.setState({
       animalsOwners: animalsOwners
-    }))
-    .then(()=> fetch(`http://localhost:5002/animals`))
-    .then(e=> e.json())
-    .then(animals => this.setState({
-      animals: animals
-    }))
-    .then(()=> fetch(`http://localhost:5002/owners`))
-    .then(e => e.json())
-    .then(owners => this.setState({
-      owners: owners
     }))
   }
 
