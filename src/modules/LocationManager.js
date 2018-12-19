@@ -1,9 +1,5 @@
 import APIManager from "./APIManager";
 
-class LocationManager extends APIManager{
-  getLocations(){
-    return this.getAll("locations")
-  }
-}
+class LocationManager extends APIManager{}
 
-export default new LocationManager()
+export default new LocationManager("locations")

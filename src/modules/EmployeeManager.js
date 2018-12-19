@@ -1,9 +1,5 @@
 import APIManager from "./APIManager";
 
-class EmployeeManager extends APIManager{
-  getEmployees(){
-    return this.getAll("employees")
-  }
-}
+class EmployeeManager extends APIManager{ }
 
-export default new EmployeeManager()
+export default new EmployeeManager("employees")

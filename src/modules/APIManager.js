@@ -1,20 +1,30 @@
-import {Component} from 'react'
-
 const remoteURL = "http://localhost:5002"
 
-export default class APIManager extends Component{
-  get(category, id){
-      return fetch(`${remoteURL}/${category}/${id}`).then(e => e.json())
+export default class APIManager{
+  constructor(resource){
+    this.resource = resource
+  }
+  get(id){
+      return fetch(`${remoteURL}/${this.resource}/${id}`).then(e => e.json())
   }
 
-  getAll(category){
-    return fetch(`${remoteURL}/${category}`).then(e => e.json())
+  getAll(){
+    return fetch(`${remoteURL}/${this.resource}`).then(e => e.json())
   }
-  delete(id, category){
-    return fetch(`${remoteURL}/${category}/${id}`, {
+  delete(id){
+    return fetch(`${remoteURL}/${this.resource}/${id}`, {
       method: "DELETE"
     })
     .then(e => e.json())
-    .then(()=> this.getAll(category))
+    .then(()=> this.getAll())
+  }
+  post(newItem){
+    return fetch(`${remoteURL}/${this.resource}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(newItem)
+    }).then(e => e.json())
   }
 }

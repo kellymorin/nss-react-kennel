@@ -1,8 +1,10 @@
 import APIManager from "./APIManager";
+import AnimalManager from "./AnimalManager";
+import AnimalOwnerManager from './AnimalOwnerManager'
 
 class OwnerManager extends APIManager{
   getOwners(){
-    return this.getAll("owners")
+    return this.getAll()
   }
 
   deleteOwner(id){
@@ -11,18 +13,18 @@ class OwnerManager extends APIManager{
     return fetch(`${remoteURL}/animalsOwners?ownerId=${id}`)
     .then(e => e.json())
     .then(animalOwners => animalsInfo.push(animalOwners))
-    .then(()=> this.delete(id, "owners"))
-    .then(()=> this.getAll("animalsOwners"))
+    .then(()=> this.delete(id))
+    .then(()=> AnimalOwnerManager.getAll()
     .then(animalsOwners => {
       if(animalsOwners.find(info => info.animalId === animalsInfo[0][0].animalId)){
         return
       } else{
-        this.delete(animalsInfo[0][0].animalId, "animals")
+        AnimalManager.delete(animalsInfo[0][0].animalId)
       }
-    })
-    .then(()=> this.getAll("owners"))
+    }))
+    .then(()=> this.getAll())
   }
 
 }
 
-export default new OwnerManager()
+export default new OwnerManager("owners")

@@ -13,12 +13,18 @@ export default class AnimalList extends Component{
     if (animalOwner.length === 0){
       animalOwner = ["no one"]
     }
-
     return animalOwner
   }
 
   render(){
     return(
+      <React.Fragment>
+      <div className="animalButton">
+        <button type="button" className="btn btn-success"
+          onClick={() => {
+            this.props.history.push("/animals/new")}
+          }> Admit Animal</button>
+      </div>
       <section className="animals">
       {
         this.props.animals.map(animal =>
@@ -34,6 +40,7 @@ export default class AnimalList extends Component{
         )
       }
       </section>
+    </React.Fragment>
     )
   }
 }
