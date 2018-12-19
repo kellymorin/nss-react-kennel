@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import dog from './DogIcon.png'
+import "./Animal.css"
 
 export default class AnimalList extends Component{
 
@@ -20,9 +22,17 @@ export default class AnimalList extends Component{
       <section className="animals">
       {
         this.props.animals.map(animal =>
-          <div key={animal.id}>
-            {animal.name} the {animal.breed}
-            <p>Owned by: {this.animalOwners(animal.id).join(" & ")}</p>
+          <div key={animal.id} className="card">
+            <div className="card-body">
+              <h5 className="card-title">
+                <img src={dog} alt="dog icon" className="icon--dog" />
+                {animal.name}
+              </h5>
+                <p className="card-title">{animal.breed}</p>
+              <p>Owned by: {this.animalOwners(animal.id).join(" & ")}</p>
+              <a href="#"
+                onClick={()=> this.props.deleteAnimal(animal.id)} className="card-link">Delete</a>
+            </div>
           </div>
           )
       }
