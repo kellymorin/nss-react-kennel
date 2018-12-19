@@ -35,7 +35,9 @@ export default class ApplicationViews extends Component{
       .then(() => this.setState(newState))
   }
 
-  isAuthenticated = () => sessionStorage.getItem("credentials") !== null
+  isAuthenticated = () => {if(localStorage.getItem("credentials") !== null || sessionStorage.getItem("credentials") !== null){ return true } else{ return false }}
+
+
 
   deleteAnimal = (id) => {
     AnimalManager.delete(id, "animals").then(animals => this.setState({
