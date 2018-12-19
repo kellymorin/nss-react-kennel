@@ -32,6 +32,61 @@ export default class ApplicationViews extends Component{
         .then(() => this.setState(newState))
   }
 
+  deleteAnimal = id => {
+    return fetch(`http://localhost:5002/animals/${id}`, {
+      method: "DELETE"
+    })
+    .then(e => e.json())
+    .then(()=> fetch(`http://localhost:5002/animals`))
+    .then(e => e.json())
+    .then(animals => this.setState({
+      animals: animals
+    }))
+  }
+
+  deleteEmployees = (id) => {
+    return fetch(`http://localhost:5002/employees/${id}`, {
+      method: "DELETE"
+    })
+    .then(e => e.json())
+    .then(()=> fetch(`http://localhost:5002/employees`))
+    .then(e => e.json())
+    .then(employees => this.setState({
+      employees: employees
+    }))
+  }
+
+  deleteOwners = (id) => {
+    let animals = []
+    return fetch(`http://localhost:5002/animalsOwners?ownerId=${id}`)
+    .then(e => e.json())
+    .then(animalOwners => animals.push(animalOwners))
+    .then(()=> fetch(`http://localhost:5002/owners/${id}`, {
+      method: "DELETE"
+    }))
+    .then(e=> e.json())
+    .then(() => console.log(animals[0][0].animalId))
+    .then(()=> fetch(`http://localhost:5002/animals/${animals[0][0].animalId}`, {
+      method: "DELETE"
+    }))
+    .then(e => e.json())
+    .then(()=> fetch(`http://localhost:5002/animalsOwners`))
+    .then(e => e.json())
+    .then(animalsOwners => this.setState({
+      animalsOwners: animalsOwners
+    }))
+    .then(()=> fetch(`http://localhost:5002/animals`))
+    .then(e=> e.json())
+    .then(animals => this.setState({
+      animals: animals
+    }))
+    .then(()=> fetch(`http://localhost:5002/owners`))
+    .then(e => e.json())
+    .then(owners => this.setState({
+      owners: owners
+    }))
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -39,13 +94,13 @@ export default class ApplicationViews extends Component{
           return <LocationList locations={this.state.locations} />
         }} />
         <Route path="/animals" render={(props)=>{
-          return <AnimalList animals={this.state.animals} owners={this.state.owners} animalsOwners={this.state.animalsOwners} />
+          return <AnimalList animals={this.state.animals} owners={this.state.owners} animalsOwners={this.state.animalsOwners} deleteAnimal={this.deleteAnimal}/>
         }} />
         <Route path="/employees" render={(props) => {
-          return <EmployeeList employees={this.state.employees} />
+          return <EmployeeList employees={this.state.employees} deleteEmployees={this.deleteEmployees}/>
         }} />
         <Route path="/owners" render={(props)=>{
-          return <OwnerList owners={this.state.owners} />
+          return <OwnerList owners={this.state.owners} deleteOwners={this.deleteOwners}/>
         }} />
       </React.Fragment>
     )
