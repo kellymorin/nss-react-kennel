@@ -7,7 +7,7 @@ export default class EmployeeDetail extends Component{
     const employee = this.props.employees.find(a => a.id === parseInt(this.props.match.params.employeeId)) || {}
 
     return(
-      <section className="employee">
+      <section className="employees">
         <div key={employee.id} className="card">
           <div className="card-body">
             <h4 className="card-title">{employee.name}</h4>
