@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import LocationNorth from './locationNorth'
-import LocationSouth from './locationSouth'
+import LocationNorth from './LocationNorth'
+import LocationSouth from './LocationSouth'
 
 export default class LocationList extends Component{
   render(){

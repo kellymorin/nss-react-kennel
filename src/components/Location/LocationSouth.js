@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import CityState from './cityState';
+import CityState from './CityState';
 
 export default class LocationSouth extends Component{
   render(){
