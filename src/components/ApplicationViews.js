@@ -21,39 +21,36 @@ export default class ApplicationViews extends Component{
   componentDidMount() {
     const newState = {}
 
-    AnimalManager.getAll().then(animals => newState.animals = animals)
-      .then(EmployeeManager.getAll().then(employees => newState.employees = employees))
-      .then(LocationManager.getAll().then(locations => newState.locations = locations))
-      .then(OwnerManager.getAll().then(owners => newState.owners = owners))
+    AnimalManager.getAnimals().then(animals => newState.animals = animals)
+      .then(()=> EmployeeManager.getEmployees().then(employees => newState.employees = employees))
+      .then(() => LocationManager.getLocations().then(locations => newState.locations = locations))
+      .then(() => OwnerManager.getOwners().then(owners => newState.owners = owners))
       .then(() => fetch("http://localhost:5002/animalsOwners").then(r => r.json()))
       .then(animalsOwners => newState.animalsOwners = animalsOwners)
       .then(() => this.setState(newState))
   }
 
   deleteAnimal = (id) => {
-    AnimalManager.delete(id).then(animals => this.setState({
+    AnimalManager.delete(id, "animals").then(animals => this.setState({
       animals: animals
     }))
   }
 
   deleteEmployees = (id) => {
-    EmployeeManager.delete(id).then(employees => this.setState({
+    EmployeeManager.delete(id, "employees").then(employees => this.setState({
       employees: employees
     }))
   }
 
   deleteOwners = (id) => {
-    OwnerManager.delete(id).then(owners => this.setState({
-      owners: owners
-    }))
-    .then(() => AnimalManager.getAll()).then(animals => this.setState({
-      animals: animals
-    }))
+    const newState = {}
+    OwnerManager.deleteOwner(id).then(owners => newState.owners = owners)
+    .then(() => AnimalManager.getAll("animals")).then(animals => newState.animals = animals)
     .then(()=> fetch("http://localhost:5002/animalsOwners"))
     .then(e => e.json())
-    .then(animalsOwners => this.setState({
-      animalsOwners: animalsOwners
-    }))
+    .then(animalsOwners => newState.animalsOwners = animalsOwners)
+    .then(() => this.setState(newState))
+
   }
 
   render() {

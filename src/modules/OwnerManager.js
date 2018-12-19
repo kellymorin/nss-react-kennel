@@ -1,34 +1,28 @@
-const remoteURL = "http://localhost:5002"
+import APIManager from "./APIManager";
 
-export default {
-  get(id) {
-    return fetch(`${remoteURL}/owners/${id}`).then(e => e.json())
-  },
-  getAll() {
-    return fetch(`${remoteURL}/owners`).then(e => e.json())
-  },
-  delete(id){
-    let animals = []
+class OwnerManager extends APIManager{
+  getOwners(){
+    return this.getAll("owners")
+  }
+
+  deleteOwner(id){
+    let animalsInfo = []
+    const remoteURL = "http://localhost:5002"
     return fetch(`${remoteURL}/animalsOwners?ownerId=${id}`)
     .then(e => e.json())
-    .then(animalOwners => animals.push(animalOwners))
-    // .then(()=> console.log(animals))
-    .then(()=> fetch(`${remoteURL}/owners/${id}`, {
-      method: "DELETE"
-    }))
-    .then(e=> e.json())
-    .then(()=> fetch(`${remoteURL}/animalsOwners`))
-    .then(e => e.json())
+    .then(animalOwners => animalsInfo.push(animalOwners))
+    .then(()=> this.delete(id, "owners"))
+    .then(()=> this.getAll("animalsOwners"))
     .then(animalsOwners => {
-      if(animalsOwners.find(info => info.animalId === animals[0][0].animalId)){
+      if(animalsOwners.find(info => info.animalId === animalsInfo[0][0].animalId)){
         return
       } else{
-        return fetch(`${remoteURL}/animals/${animals[0][0].animalId}`, {
-          method: "DELETE"
-        })
-        .then(e => e.json())
+        this.delete(animalsInfo[0][0].animalId, "animals")
       }
     })
-    .then(()=> this.getAll())
+    .then(()=> this.getAll("owners"))
   }
+
 }
+
+export default new OwnerManager()
