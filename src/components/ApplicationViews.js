@@ -8,6 +8,10 @@ import AnimalManager from '../modules/AnimalManager'
 import EmployeeManager from '../modules/EmployeeManager'
 import OwnerManager from '../modules/OwnerManager'
 import LocationManager from '../modules/LocationManager'
+import AnimalDetail from './Animal/AnimalDetail'
+import OwnerDetail from './Owner/OwnerDetail'
+import EmployeeDetail from './Employee/EmployeeDetail'
+import LocationDetail from './Location/LocationDetail'
 
 export default class ApplicationViews extends Component{
   state={
@@ -59,14 +63,26 @@ export default class ApplicationViews extends Component{
         <Route exact path="/" render={(props)=>{
           return <LocationList locations={this.state.locations} />
         }} />
-        <Route path="/animals" render={(props)=>{
+        <Route exact path="/animals" render={(props)=>{
           return <AnimalList animals={this.state.animals} owners={this.state.owners} animalsOwners={this.state.animalsOwners} deleteAnimal={this.deleteAnimal}/>
         }} />
-        <Route path="/employees" render={(props) => {
+        <Route exact path="/employees" render={(props) => {
           return <EmployeeList employees={this.state.employees} deleteEmployees={this.deleteEmployees}/>
         }} />
-        <Route path="/owners" render={(props)=>{
+        <Route exact path="/owners" render={(props)=>{
           return <OwnerList owners={this.state.owners} deleteOwners={this.deleteOwners}/>
+        }} />
+        <Route path="/animals/:animalId(\d+)" render={(props) => {
+          return <AnimalDetail {...props} deleteAnimals={this.deleteAnimals} animals={this.state.animals} />
+        }} />
+        <Route path="/owners/:ownerId(\d+)" render={(props)=> {
+          return <OwnerDetail {...props} owners={this.state.owners} deleteOwners={this.deleteOwners} />
+        }} />
+        <Route path="/employees/:employeeId(\d+)" render={(props)=> {
+          return <EmployeeDetail {...props} employees={this.state.employees}deleteEmployees={this.deleteEmployees} />
+        }} />
+        <Route path="/locations/:locationId(\d+)" render={(props)=> {
+          return <LocationDetail {...props} locations={this.state.locations} />
         }} />
       </React.Fragment>
     )
